@@ -1,0 +1,26 @@
+{
+  "canisters": {
+    "weather_contract_backend": {
+      "candid": "src/weather_contract_backend/weather_contract_backend.did",
+      "package": "weather_contract_backend",
+      "type": "rust"
+    },
+    "weather_contract_frontend": {
+      "dependencies": [
+        "weather_contract_backend"
+      ],
+      "source": [
+        "src/weather_contract_frontend/assets"
+      ],
+      "type": "assets"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
