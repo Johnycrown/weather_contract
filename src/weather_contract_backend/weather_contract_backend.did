@@ -1,3 +1,20 @@
+type Weather = {
+  temperature: nat;
+  pressure: nat;
+  humidity: nat;
+  wind_speed: nat;
+};
+
+type ContractState = {
+  api_key: text;
+  city: text;
+  country_code: text;
+  weather: Weather;
+};
+
+
 service : {
-    "greet": (text) -> (text) query;
+    "fetch_weather_data": (text, text, text) -> () update;
+    "get_weather_data": (text, text) -> (opt Weather) query;
 }
+
