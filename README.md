@@ -1,61 +1,55 @@
-# weather_contract
+**Weather Contract**
+This is a smart contract written in Rust for interacting with an API to fetch weather data. It's built to run on the Internet Computer (ICP) platform.
 
-Welcome to your new weather_contract project and to the internet computer development community. By default, creating a new project adds this README and some template files to your project directory. You can edit these template files to customize your project and to include your own code to speed up the development cycle.
+**Overview**
 
-To get started, you might want to explore the project directory structure and the default configuration file. Working with this project in your development environment will not affect any production deployment or identity tokens.
+This contract allows users to fetch weather data from an external API based on the provided city and country code. It utilizes the reqwest crate for making HTTP requests and serde_json crate for parsing JSON responses. The contract stores the fetched weather data in a local map for future retrieval.
 
-To learn more before you start working with weather_contract, see the following documentation available online:
+**Contract Structure**
 
-- [Quick Start](https://internetcomputer.org/docs/current/developer-docs/setup/deploy-locally)
-- [SDK Developer Tools](https://internetcomputer.org/docs/current/developer-docs/setup/install)
-- [Rust Canister Development Guide](https://internetcomputer.org/docs/current/developer-docs/backend/rust/)
-- [ic-cdk](https://docs.rs/ic-cdk)
-- [ic-cdk-macros](https://docs.rs/ic-cdk-macros)
-- [Candid Introduction](https://internetcomputer.org/docs/current/developer-docs/backend/candid/)
+The contract consists of the following components:
 
-If you want to start working on your project right away, you might want to try the following commands:
+**ContractState**: A struct defining the contract state, including the API key, city, and country code.
+Weather: A struct representing weather data, including temperature, pressure, humidity, and wind speed.
+WeatherContract: The main contract implementation, responsible for fetching weather data and storing it.
+Functions
 
-```bash
-cd weather_contract/
-dfx help
-dfx canister --help
-```
+greet(name: String) -> String
+Description: A simple greeting function that returns a personalized greeting message.
+Parameters:
+name: A string representing the name of the person to greet.
+Returns: A string containing the greeting message.
+fetch_weather_data(city: String, country_code: String, api_key: String)
+Description: An asynchronous function to fetch weather data from an external API.
+Parameters:
+city: The name of the city for which to fetch weather data.
+country_code: The country code of the city.
+api_key: The API key required for accessing the weather API.
+Behavior: Makes an HTTP request to the OpenWeatherMap API to fetch weather data for the specified city and country code. If successful, parses the JSON response and stores the weather data in the local map.
+get_weather_data(city: String, country_code: String) -> Option<Weather>
+Description: Retrieves previously fetched weather data for a given city and country code.
+Parameters:
+city: The name of the city for which to retrieve weather data.
+country_code: The country code of the city.
+Returns: An optional Weather struct containing the weather data if available, or None if no data is found.
+Storage
 
-## Running the project locally
+The contract uses a local map (WEATHER_MAP) to store weather data. The map key is a tuple (u64, String, String), where the first element is a unique identifier, and the second and third elements represent the city and country code, respectively. The value associated with each key is a Weather struct containing the weather data.
 
-If you want to test your project locally, you can use the following commands:
+**Memory Management**
 
-```bash
-# Starts the replica, running in the background
-dfx start --background
+The contract utilizes thread-local memory management (MEMORY_MANAGER) to handle memory allocation and deallocation. It uses a virtual memory implementation (Memory) to manage memory resources effectively.
 
-# Deploys your canisters to the replica and generates your candid interface
-dfx deploy
-```
+Usage
 
-Once the job completes, your application will be available at `http://localhost:4943?canisterId={asset_canister_id}`.
+To interact with this contract, you can deploy it to the Internet Computer platform and call its exposed functions using the provided interface.
 
-If you have made changes to your backend canister, you can generate a new candid interface with
+**Dependencies**
 
-```bash
-npm run generate
-```
+This contract relies on the following Rust crates:
 
-at any time. This is recommended before starting the frontend development server, and will be run automatically any time you run `dfx deploy`.
-
-If you are making frontend changes, you can start a development server with
-
-```bash
-npm start
-```
-
-Which will start a server at `http://localhost:8080`, proxying API requests to the replica at port 4943.
-
-### Note on frontend environment variables
-
-If you are hosting frontend code somewhere without using DFX, you may need to make one of the following adjustments to ensure your project does not fetch the root key in production:
-
-- set`DFX_NETWORK` to `ic` if you are using Webpack
-- use your own preferred method to replace `process.env.DFX_NETWORK` in the autogenerated declarations
-  - Setting `canisters -> {asset_canister_id} -> declarations -> env_override to a string` in `dfx.json` will replace `process.env.DFX_NETWORK` with the string in the autogenerated declarations
-- Write your own `createActor` constructor
+candid: For Candid type definitions and serialization.
+ic_stable_structures: For stable B-tree map implementation and memory management.
+reqwest: For making HTTP requests to fetch weather data.
+serde_json: For parsing JSON responses from the weather API.
+Ensure that these dependencies are included in your project's Cargo.toml file before compiling the contract.
